@@ -1,0 +1,209 @@
+[p GLOBOPT AUTOSTATIC IEEE_DBL IEEE_FLT PIC14 PICREGULAR PICMID ]
+[d version 1.1 ]
+[d edition pro ]
+[d chip 16F887 ]
+[d frameptr 0 ]
+"10 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\sources\c90\common\sprcadd.c
+[v ___fladd __fladd `(d  1 e 4 0 ]
+"4 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\sources\c90\common\Umul8_16.c
+[v __Umul8_16 _Umul8_16 `(ui  1 e 2 0 ]
+"6 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\sources\c90\pic\__eeprom.c
+[v ___eecpymem __eecpymem `(v  1 e 1 0 ]
+"39
+[v ___memcpyee __memcpyee `(v  1 e 1 0 ]
+"47 C:\Users\juan\Documents\GitHub\Lab4Digital2\Lab4_Master.X\Lab4_Master.c
+[v _ISR ISR `II(v  1 e 1 0 ]
+"57
+[v _main main `(v  1 e 1 0 ]
+"76
+[v _setup setup `(v  1 e 1 0 ]
+"91
+[v _spi_init spi_init `(v  1 e 1 0 ]
+"106
+[v _SPI_WRITE SPI_WRITE `(v  1 e 1 0 ]
+"110
+[v _SPI_READ_MT SPI_READ_MT `(uc  1 e 1 0 ]
+[s S34 . 1 `uc 1 RA0 1 0 :1:0 
+`uc 1 RA1 1 0 :1:1 
+`uc 1 RA2 1 0 :1:2 
+`uc 1 RA3 1 0 :1:3 
+`uc 1 RA4 1 0 :1:4 
+`uc 1 RA5 1 0 :1:5 
+`uc 1 RA6 1 0 :1:6 
+`uc 1 RA7 1 0 :1:7 
+]
+"183 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic16f887.h
+[u S43 . 1 `S34 1 . 1 0 ]
+[v _PORTAbits PORTAbits `VES43  1 e 1 @5 ]
+"228
+[v _PORTB PORTB `VEuc  1 e 1 @6 ]
+[s S118 . 1 `uc 1 RBIF 1 0 :1:0 
+`uc 1 INTF 1 0 :1:1 
+`uc 1 T0IF 1 0 :1:2 
+`uc 1 RBIE 1 0 :1:3 
+`uc 1 INTE 1 0 :1:4 
+`uc 1 T0IE 1 0 :1:5 
+`uc 1 PEIE 1 0 :1:6 
+`uc 1 GIE 1 0 :1:7 
+]
+"482
+[s S127 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 TMR0IF 1 0 :1:2 
+`uc 1 . 1 0 :2:3 
+`uc 1 TMR0IE 1 0 :1:5 
+]
+[u S132 . 1 `S118 1 . 1 0 `S127 1 . 1 0 ]
+[v _INTCONbits INTCONbits `VES132  1 e 1 @11 ]
+"843
+[v _SSPBUF SSPBUF `VEuc  1 e 1 @19 ]
+[s S258 . 1 `uc 1 SSPM 1 0 :4:0 
+`uc 1 CKP 1 0 :1:4 
+`uc 1 SSPEN 1 0 :1:5 
+`uc 1 SSPOV 1 0 :1:6 
+`uc 1 WCOL 1 0 :1:7 
+]
+"870
+[s S264 . 1 `uc 1 SSPM0 1 0 :1:0 
+`uc 1 SSPM1 1 0 :1:1 
+`uc 1 SSPM2 1 0 :1:2 
+`uc 1 SSPM3 1 0 :1:3 
+]
+[u S269 . 1 `S258 1 . 1 0 `S264 1 . 1 0 ]
+[v _SSPCONbits SSPCONbits `VES269  1 e 1 @20 ]
+[s S71 . 1 `uc 1 TRISA0 1 0 :1:0 
+`uc 1 TRISA1 1 0 :1:1 
+`uc 1 TRISA2 1 0 :1:2 
+`uc 1 TRISA3 1 0 :1:3 
+`uc 1 TRISA4 1 0 :1:4 
+`uc 1 TRISA5 1 0 :1:5 
+`uc 1 TRISA6 1 0 :1:6 
+`uc 1 TRISA7 1 0 :1:7 
+]
+"1433
+[u S80 . 1 `S71 1 . 1 0 ]
+[v _TRISAbits TRISAbits `VES80  1 e 1 @133 ]
+"1478
+[v _TRISB TRISB `VEuc  1 e 1 @134 ]
+[s S284 . 1 `uc 1 TRISC0 1 0 :1:0 
+`uc 1 TRISC1 1 0 :1:1 
+`uc 1 TRISC2 1 0 :1:2 
+`uc 1 TRISC3 1 0 :1:3 
+`uc 1 TRISC4 1 0 :1:4 
+`uc 1 TRISC5 1 0 :1:5 
+`uc 1 TRISC6 1 0 :1:6 
+`uc 1 TRISC7 1 0 :1:7 
+]
+"1557
+[u S293 . 1 `S284 1 . 1 0 ]
+[v _TRISCbits TRISCbits `VES293  1 e 1 @135 ]
+[s S150 . 1 `uc 1 TMR1IE 1 0 :1:0 
+`uc 1 TMR2IE 1 0 :1:1 
+`uc 1 CCP1IE 1 0 :1:2 
+`uc 1 SSPIE 1 0 :1:3 
+`uc 1 TXIE 1 0 :1:4 
+`uc 1 RCIE 1 0 :1:5 
+`uc 1 ADIE 1 0 :1:6 
+]
+"1718
+[u S158 . 1 `S150 1 . 1 0 ]
+[v _PIE1bits PIE1bits `VES158  1 e 1 @140 ]
+[s S92 . 1 `uc 1 SCS 1 0 :1:0 
+`uc 1 LTS 1 0 :1:1 
+`uc 1 HTS 1 0 :1:2 
+`uc 1 OSTS 1 0 :1:3 
+`uc 1 IRCF 1 0 :3:4 
+]
+"1882
+[s S98 . 1 `uc 1 . 1 0 :4:0 
+`uc 1 IRCF0 1 0 :1:4 
+`uc 1 IRCF1 1 0 :1:5 
+`uc 1 IRCF2 1 0 :1:6 
+]
+[u S103 . 1 `S92 1 . 1 0 `S98 1 . 1 0 ]
+[v _OSCCONbits OSCCONbits `VES103  1 e 1 @143 ]
+[s S169 . 1 `uc 1 BF 1 0 :1:0 
+`uc 1 UA 1 0 :1:1 
+`uc 1 R_nW 1 0 :1:2 
+`uc 1 S 1 0 :1:3 
+`uc 1 P 1 0 :1:4 
+`uc 1 D_nA 1 0 :1:5 
+`uc 1 CKE 1 0 :1:6 
+`uc 1 SMP 1 0 :1:7 
+]
+"2231
+[s S178 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 R 1 0 :1:2 
+`uc 1 . 1 0 :2:3 
+`uc 1 D 1 0 :1:5 
+]
+[s S183 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 I2C_READ 1 0 :1:2 
+`uc 1 I2C_START 1 0 :1:3 
+`uc 1 I2C_STOP 1 0 :1:4 
+`uc 1 I2C_DATA 1 0 :1:5 
+]
+[s S189 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 nW 1 0 :1:2 
+`uc 1 . 1 0 :2:3 
+`uc 1 nA 1 0 :1:5 
+]
+[s S194 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 nWRITE 1 0 :1:2 
+`uc 1 . 1 0 :2:3 
+`uc 1 nADDRESS 1 0 :1:5 
+]
+[s S199 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 R_W 1 0 :1:2 
+`uc 1 . 1 0 :2:3 
+`uc 1 D_A 1 0 :1:5 
+]
+[s S204 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 READ_WRITE 1 0 :1:2 
+`uc 1 . 1 0 :2:3 
+`uc 1 DATA_ADDRESS 1 0 :1:5 
+]
+[u S209 . 1 `S169 1 . 1 0 `S178 1 . 1 0 `S183 1 . 1 0 `S189 1 . 1 0 `S194 1 . 1 0 `S199 1 . 1 0 `S204 1 . 1 0 ]
+[v _SSPSTATbits SSPSTATbits `VES209  1 e 1 @148 ]
+"3641
+[v _BF BF `VEb  1 e 0 @1184 ]
+"4277
+[v _SSPIF SSPIF `VEb  1 e 0 @99 ]
+"4292
+[v _SSPOV SSPOV `VEb  1 e 0 @166 ]
+"39 C:\Users\juan\Documents\GitHub\Lab4Digital2\Lab4_Master.X\Lab4_Master.c
+[v _Data Data `uc  1 e 1 0 ]
+"40
+[v _pot1 pot1 `uc  1 e 1 0 ]
+"57
+[v _main main `(v  1 e 1 0 ]
+{
+"75
+} 0
+"91
+[v _spi_init spi_init `(v  1 e 1 0 ]
+{
+"105
+} 0
+"76
+[v _setup setup `(v  1 e 1 0 ]
+{
+"89
+} 0
+"106
+[v _SPI_WRITE SPI_WRITE `(v  1 e 1 0 ]
+{
+[v SPI_WRITE@DATA DATA `uc  1 a 1 wreg ]
+[v SPI_WRITE@DATA DATA `uc  1 a 1 wreg ]
+[v SPI_WRITE@DATA DATA `uc  1 a 1 2 ]
+"108
+} 0
+"110
+[v _SPI_READ_MT SPI_READ_MT `(uc  1 e 1 0 ]
+{
+"118
+} 0
+"47
+[v _ISR ISR `II(v  1 e 1 0 ]
+{
+"55
+} 0
