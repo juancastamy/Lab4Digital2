@@ -34,87 +34,59 @@
 
 
 #include <xc.h>
-#define _XTAL_FREQ 4000000
+#include <pic16f887.h>
 #include <stdint.h>
+#include "SPI_SLAVE.h"
+#define _XTAL_FREQ 8000000
 void setup(void);
-void SPI_WRITE_SV (uint8_t DATA);
+
 void ADC (void);
-void SPI_Slave_Init();
-uint8_t SPI_Read();
-uint8_t Data;
 uint8_t adc;
 uint8_t adc2;
  
 void __interrupt() ISR(void){
-    if (SSPIF == 1){
-        PORTD = SPI_Read();
-        if (PORTD==1){
-            SPI_WRITE_SV(adc);
+    PORTD = spiRead();
+    if (SSPIF == 1){ 
+        if (PORTD ==1){
+         spiWrite(adc);
+    } 
+        if (PORTD == 2){
+          spiWrite(adc2);
         }
-//        if (PORTD == 2){
-//            SPI_WRITE_SV(adc2);
-//        }
-        SSPIF = 0;
+        SSPIF = 0;  
     }
 }
 
 void main(void) {
     setup();
-    SPI_Slave_Init(); 
+    spiInit(SPI_SLAVE_SS_EN, SPI_DATA_SAMPLE_MIDDLE, SPI_CLOCK_IDLE_LOW, SPI_IDLE_2_ACTIVE);
     ADC();
 }
 
 void setup (void){
-    TRISB = 0;
-    TRISAbits.TRISA0 = 1;
-    TRISAbits.TRISA3 = 1;
-    OSCCONbits.IRCF = 0b110; //8Mhz
+    OSCCONbits.IRCF = 0b111; //8Mhz
     OSCCONbits.OSTS= 0;
     OSCCONbits.HTS = 0;
     OSCCONbits.LTS = 0;
     OSCCONbits.SCS = 1;
-    INTCONbits.GIE = 1;
-    INTCONbits.PEIE=1;
-    PIE1bits.SSPIE = 1;
+    TRISB = 0;
+    TRISD = 0;
+    TRISDbits.TRISD1 = 0;
+
+    PORTB = 0;
+    PORTD = 0;
+
+    INTCONbits.GIE = 1;         // Habilitamos interrupciones
+    INTCONbits.PEIE = 1;        // Habilitamos interrupciones PEIE
+    PIR1bits.SSPIF = 0;         // Borramos bandera interrupción MSSP
+    PIE1bits.SSPIE = 1;         // Habilitamos interrupción MSSP
+    TRISAbits.TRISA5 = 1; 
+    TRISA = 0b00001001;
     ANSEL = 0b00001001;
     ANSELH = 0;
 }
-//OBTENIDO DE  https://deepbluembedded.com/spi-tutorial-with-pic-microcontrollers/ 
-void SPI_Slave_Init(){
-//MODO ESCLAVO + SS ENCENDIDO
-    SSPCONbits.SSPM = 0b0100;
-//SINCRONO
-    SSPCONbits.SSPEN = 1;
-// CONFIGURACION DEL LA POLARIDAD CLO CLK Y FASE DE FINCIONAMIENTO
-    SSPCONbits.CKP = 1;
-    SSPSTATbits.CKE = 0;
-  // Clear The SMP Bit
-    SSPSTATbits.SMP = 0;
-  // CONFIGURACION DE PINES
-    TRISCbits.TRISC4 = 1;
-    TRISCbits.TRISC5 = 0; // SDO -> Output
-    TRISCbits.TRISC3 = 1; // SCK -> Intput
-    TRISAbits.TRISA5 = 1;
-}
-
-void SPI_WRITE_SV (uint8_t DATA){
-    SSPBUF=DATA;
-  
-}
-
-uint8_t SPI_Read(){
-  uint8_t Data;
-  if(BF){
-    Data = SSPBUF; // Read The Buffer
-    BF = 0; // Clear The Buffer-Filled Indicator Bit
-    SSPIF = 0; // Clear The Interrupt Flag Bit
-    SSPOV = 0; // Clear The Overflow Indicator Bit
-    return Data;
-  }
-}
 
 void ADC (void){
-    while(1){
     ADCON0bits.ADCS0 = 0;
     ADCON0bits.ADCS1 = 1;
     ADCON0bits.ADON = 1;   // adc on
@@ -122,21 +94,19 @@ void ADC (void){
     ADCON1bits.VCFG0 = 0;
     ADCON1bits.VCFG1 = 0;
     while(1){
-        __delay_ms(1);
+        __delay_ms(5);
         ADCON0bits.CHS = 0b0000;
         ADCON0bits.ADON = 1;
-        ADCON0bits.GO = 1;
         PIR1bits.ADIF = 0;
-        //adc = ADRESH;
-        PORTB = ADRESH;
-        
-//        __delay_ms(5);
-//        ADCON0bits.CHS = 0b0011;
-//        ADCON0bits.ADON = 1;   // adc on
-//        ADCON0bits.GO = 1;
-//        PIR1bits.ADIF = 0;
-//        adc2 = ADRESH; 
-    }
+        ADCON0bits.GO = 1;
+        adc = ADRESH;
+        PORTB = adc;        
+        __delay_ms(15);
+        ADCON0bits.CHS = 0b0011;
+        ADCON0bits.ADON = 1;   // adc on
+        PIR1bits.ADIF = 0;
+        ADCON0bits.GO = 1;
+        adc2 = ADRESH; 
     }
     return;
-}
+} 

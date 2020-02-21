@@ -35,84 +35,60 @@
 
 #include <xc.h>
 #include <stdint.h>
-#define _XTAL_FREQ 4000000
-uint8_t Data;
+#include "SPI_MASTER.h"
+#define _XTAL_FREQ 8000000
+
 uint8_t pot1;
 uint8_t pot2;
 void setup(void);
-void spi_init (void);
-void SPI_WRITE (uint8_t DATA);
-uint8_t SPI_READ_MT ();
 
-void __interrupt() ISR(){
-    if (SSPIF == 1){
-        PORTB = SSPBUF;
-        BF=0;
-        SSPIF==0;
-        
-    }
-    return;
-}
+
+
 
 void main(void) {
     setup();
-    spi_init();
     while(1){
-    PORTAbits.RA0 = 0;
-    __delay_ms(1);
-    SPI_WRITE(1);
-    pot1 = SPI_READ_MT ();
-    PORTB = pot1;
-//    __delay_ms(1);
-//    PORTAbits.RA0 = 1;
-//    __delay_ms(1);
-//    PORTAbits.RA0 = 0;
-//    __delay_ms(1);
-//    SPI_WRITE(2);
-//    pot2 = SPI_READ_MT ();
-//    PORTAbits.RA0 = 1;
+        PORTDbits.RD1 = 0;
+        __delay_ms(15);
+        spiWrite(1);
+        pot1 = spiRead();
+        PORTB = pot1;
+        __delay_ms(15);
+        PORTDbits.RD1 =1;
+       
+        PORTDbits.RD1=0;
+       __delay_ms(15);
+        spiWrite(2);
+        pot2 = spiRead();
+        __delay_ms(15);
+        PORTDbits.RD1 =1;
     }
+    return;
 }
 void setup(void){
-    TRISB=0;
-    PORTB=0;
-    TRISAbits.TRISA0 = 0;
-    OSCCONbits.IRCF = 0b110; //4Mhz
+    OSCCONbits.IRCF = 0b111; //8Mhz
     OSCCONbits.OSTS= 0;
     OSCCONbits.HTS = 0;
     OSCCONbits.LTS = 0;
-    OSCCONbits.SCS = 1;   
-    INTCONbits.GIE = 1;
-    INTCONbits.PEIE=1;
-    PIE1bits.SSPIE = 1;
-    PORTAbits.RA0 = 0;
+    OSCCONbits.SCS = 1; 
+    ANSEL = 0;
+    ANSELH = 0;
+    TRISDbits.TRISD1 = 0;
+    TRISDbits.TRISD2 = 0;
+    TRISA = 0;
+    TRISB = 0;
+    
+    TRISD = 0;
+
+    PORTB = 0;
+    PORTD = 0;
+
+    INTCONbits.GIE = 1;         // Habilitamos interrupciones
+    INTCONbits.PEIE = 1;        // Habilitamos interrupciones PEIE
+    PIR1bits.SSPIF = 0;         // Borramos bandera interrupción MSSP
+    PIE1bits.SSPIE = 1;         // Habilitamos interrupción MSSP
+    TRISAbits.TRISA5 = 1;       // Slave Select
+    spiInit(SPI_MASTER_OSC_DIV4, SPI_DATA_SAMPLE_MIDDLE, SPI_CLOCK_IDLE_LOW, SPI_IDLE_2_ACTIVE);
+      
 }
 
-void spi_init (void){
-   SSPSTATbits.CKE=0;
-   SSPCONbits.CKP = 0;
-   
-   SSPSTATbits.SMP=0;
-           
-//sincrono
-   SSPCONbits.SSPEN = 1;
-//PINES
-   TRISCbits.TRISC4 = 1;
-   TRISCbits.TRISC5 = 0;
-   TRISCbits.TRISC3 = 0;
-   SSPCONbits.SSPM=0b0010;
-   
-}
-void SPI_WRITE (uint8_t DATA){
-    SSPBUF=DATA;
-}
-
-uint8_t SPI_READ_MT (){
-  if(BF==1) // Check If Any New Data Is Received
-  {
-    Data = SSPBUF; // Read The Buffer
-    BF = 0; // Clear The Buffer-Filled Indicator Bit
-    SSPOV = 0;
-  }
-  return Data;
-}
