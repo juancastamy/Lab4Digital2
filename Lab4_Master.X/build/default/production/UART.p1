@@ -306,70 +306,70 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;UART.c: 7:  SPBRG = (8000000 - baudrate*16)/(baudrate*16);
 [e = _SPBRG -> / - -> 8000000 `l * _baudrate -> -> 16 `i `l * _baudrate -> -> 16 `i `l `uc ]
 "8
-[; ;UART.c: 8:     TXSTAbits.BRGH = 1;
+[; ;UART.c: 8:      TXSTAbits.BRGH = 1;
 [e = . . _TXSTAbits 0 2 -> -> 1 `i `uc ]
 "9
-[; ;UART.c: 9:     TXSTAbits.SYNC = 0;
-[e = . . _TXSTAbits 0 4 -> -> 0 `i `uc ]
-"10
-[; ;UART.c: 10:     RCSTAbits.SPEN = 1;
-[e = . . _RCSTAbits 0 7 -> -> 1 `i `uc ]
-"11
-[; ;UART.c: 11:     RCSTAbits.CREN = 1;
-[e = . . _RCSTAbits 0 4 -> -> 1 `i `uc ]
-"12
-[; ;UART.c: 12:     TXSTAbits.TXEN = 1;
+[; ;UART.c: 9:     TXSTAbits.TXEN = 1;
 [e = . . _TXSTAbits 0 5 -> -> 1 `i `uc ]
-"13
-[; ;UART.c: 13:     TXSTAbits.TX9 = 0;
+"10
+[; ;UART.c: 10:     TXSTAbits.SYNC = 0;
+[e = . . _TXSTAbits 0 4 -> -> 0 `i `uc ]
+"11
+[; ;UART.c: 11:     TXSTAbits.TX9 = 0;
 [e = . . _TXSTAbits 0 6 -> -> 0 `i `uc ]
+"13
+[; ;UART.c: 13:     RCSTAbits.CREN = 1;
+[e = . . _RCSTAbits 0 4 -> -> 1 `i `uc ]
 "14
-[; ;UART.c: 14:     RCSTAbits.RX9 = 0;
-[e = . . _RCSTAbits 0 6 -> -> 0 `i `uc ]
+[; ;UART.c: 14:     RCSTAbits.SPEN = 1;
+[e = . . _RCSTAbits 0 7 -> -> 1 `i `uc ]
 "15
-[; ;UART.c: 15: }
+[; ;UART.c: 15:     RCSTAbits.RX9 = 0;
+[e = . . _RCSTAbits 0 6 -> -> 0 `i `uc ]
+"16
+[; ;UART.c: 16: }
 [e :UE 138 ]
 }
-"22
-[; ;UART.c: 22: uint8_t UART_READ(){
+"23
+[; ;UART.c: 23: uint8_t UART_READ(){
 [v _UART_READ `(uc ~T0 @X0 1 ef ]
 {
 [e :U _UART_READ ]
 [f ]
-"23
-[; ;UART.c: 23:     if(PIR1bits.RCIF==1){
+"24
+[; ;UART.c: 24:     if(PIR1bits.RCIF==1){
 [e $ ! == -> . . _PIR1bits 0 5 `i -> 1 `i 140  ]
 {
-"24
-[; ;UART.c: 24:         return RCREG;
+"25
+[; ;UART.c: 25:         return RCREG;
 [e ) _RCREG ]
 [e $UE 139  ]
-"25
-[; ;UART.c: 25:     }
+"26
+[; ;UART.c: 26:     }
 }
 [e :U 140 ]
-"26
-[; ;UART.c: 26: }
+"27
+[; ;UART.c: 27: }
 [e :UE 139 ]
 }
-"30
-[; ;UART.c: 30: void UART_WRITE(char data){
+"31
+[; ;UART.c: 31: void UART_WRITE(char data){
 [v _UART_WRITE `(v ~T0 @X0 1 ef1`uc ]
 {
 [e :U _UART_WRITE ]
 [v _data `uc ~T0 @X0 1 r1 ]
 [f ]
-"31
-[; ;UART.c: 31:   while(!TXSTAbits.TRMT);
+"32
+[; ;UART.c: 32:   while(!TXSTAbits.TRMT);
 [e $U 142  ]
 [e :U 143 ]
 [e :U 142 ]
 [e $ ! != -> . . _TXSTAbits 0 1 `i -> 0 `i 143  ]
 [e :U 144 ]
-"32
-[; ;UART.c: 32:   TXREG = data;
-[e = _TXREG -> _data `uc ]
 "33
-[; ;UART.c: 33: }
+[; ;UART.c: 33:   TXREG = data;
+[e = _TXREG -> _data `uc ]
+"34
+[; ;UART.c: 34: }
 [e :UE 141 ]
 }

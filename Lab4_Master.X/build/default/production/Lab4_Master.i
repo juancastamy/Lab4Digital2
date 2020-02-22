@@ -2849,7 +2849,7 @@ void main(void) {
 
         PORTB = UART_READ();
 
-          UART_WRITE(pot1);
+        UART_WRITE(pot1);
         _delay((unsigned long)((5)*(8000000/4000.0)));
         UART_WRITE(pot2);
 
@@ -2866,5 +2866,8 @@ void setup(void){
     TRISDbits.TRISD1 = 0;
     ANSEL = 0;
     ANSELH = 0;
+    PIE1bits.RCIE = 1;
+    INTCONbits.PEIE = 1;
+    INTCONbits.GIE = 1;
     spiInit(SPI_MASTER_OSC_DIV4, SPI_DATA_SAMPLE_MIDDLE, SPI_CLOCK_IDLE_LOW, SPI_IDLE_2_ACTIVE);
 }

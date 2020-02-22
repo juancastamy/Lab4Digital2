@@ -80,7 +80,7 @@ void main(void) {
         
         PORTB = UART_READ();     //Valor transmitido por la computadora es leído y colocado en puerto
 
-          UART_WRITE(pot1);        //Escribir el el registro de UART para transmitir dato 1	        UART_Write(RecPOT1);        //Escribir el el registro de UART para transmitir dato 1
+        UART_WRITE(pot1);        //Escribir el el registro de UART para transmitir dato 1	        UART_Write(RecPOT1);        //Escribir el el registro de UART para transmitir dato 1
         __delay_ms(5);              //Delay de 5 milisegundos	        __delay_ms(5);              //Delay de 5 milisegundos
         UART_WRITE(pot2);        //Escribir el el registro de UART para transmitir dato 1	        UART_Write(RecPOT2);        //Escribir el el registro de UART para transmitir dato 1
 
@@ -97,6 +97,9 @@ void setup(void){
     TRISDbits.TRISD1 = 0;
     ANSEL = 0;
     ANSELH = 0;
+    PIE1bits.RCIE = 1;
+    INTCONbits.PEIE = 1;
+    INTCONbits.GIE = 1;
     spiInit(SPI_MASTER_OSC_DIV4, SPI_DATA_SAMPLE_MIDDLE, SPI_CLOCK_IDLE_LOW, SPI_IDLE_2_ACTIVE);  
 }
 

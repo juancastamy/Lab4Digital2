@@ -2641,12 +2641,13 @@ void UART_Write_Text(char *text);
 
 uint8_t UART_INIT(const long int baudrate){
  SPBRG = (8000000 - baudrate*16)/(baudrate*16);
-    TXSTAbits.BRGH = 1;
-    TXSTAbits.SYNC = 0;
-    RCSTAbits.SPEN = 1;
-    RCSTAbits.CREN = 1;
+     TXSTAbits.BRGH = 1;
     TXSTAbits.TXEN = 1;
+    TXSTAbits.SYNC = 0;
     TXSTAbits.TX9 = 0;
+
+    RCSTAbits.CREN = 1;
+    RCSTAbits.SPEN = 1;
     RCSTAbits.RX9 = 0;
 }
 
