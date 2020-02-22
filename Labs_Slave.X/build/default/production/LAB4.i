@@ -2652,10 +2652,7 @@ typedef uint16_t uintptr_t;
 # 38 "LAB4.c" 2
 
 # 1 "./SPI_SLAVE.h" 1
-# 16 "./SPI_SLAVE.h"
-# 1 "./SPI_SLAVE.h" 1
-# 16 "./SPI_SLAVE.h" 2
-
+# 17 "./SPI_SLAVE.h"
 typedef enum
 {
     SPI_MASTER_OSC_DIV4 = 0b00100000,
@@ -2691,53 +2688,49 @@ unsigned spiDataReady();
 char spiRead();
 # 39 "LAB4.c" 2
 
+# 1 "./OSCI_SLAVE.h" 1
+# 34 "./OSCI_SLAVE.h"
+#pragma config FOSC = INTRC_NOCLKOUT
+
+
+
+
+
+
+
+void initOsc(uint8_t frec);
+# 40 "LAB4.c" 2
+
 
 void setup(void);
-
 void ADC (void);
-uint8_t adc;
-uint8_t adc2;
-
-void __attribute__((picinterrupt(("")))) ISR(void){
-    PORTD = spiRead();
-    if (SSPIF == 1){
-        if (PORTD ==1){
-         spiWrite(adc);
-    }
-        if (PORTD == 2){
-          spiWrite(adc2);
-        }
-        SSPIF = 0;
-    }
-}
-
+uint8_t adc = 0;
+uint8_t adc2 = 0;
+# 61 "LAB4.c"
 void main(void) {
     setup();
-    spiInit(SPI_SLAVE_SS_EN, SPI_DATA_SAMPLE_MIDDLE, SPI_CLOCK_IDLE_LOW, SPI_IDLE_2_ACTIVE);
+    initOsc(7);
     ADC();
+
 }
 
 void setup (void){
-    OSCCONbits.IRCF = 0b111;
-    OSCCONbits.OSTS= 0;
-    OSCCONbits.HTS = 0;
-    OSCCONbits.LTS = 0;
-    OSCCONbits.SCS = 1;
-    TRISB = 0;
-    TRISD = 0;
-    TRISDbits.TRISD1 = 0;
 
-    PORTB = 0;
-    PORTD = 0;
-
-    INTCONbits.GIE = 1;
-    INTCONbits.PEIE = 1;
-    PIR1bits.SSPIF = 0;
-    PIE1bits.SSPIE = 1;
-    TRISAbits.TRISA5 = 1;
     TRISA = 0b00001001;
+    TRISB = 0;
+    TRISC = 0b00001000;
+    TRISD = 0;
     ANSEL = 0b00001001;
     ANSELH = 0;
+
+
+
+
+
+
+    TRISAbits.TRISA5 = 1;
+    spiInit(SPI_SLAVE_SS_EN, SPI_DATA_SAMPLE_MIDDLE, SPI_CLOCK_IDLE_LOW, SPI_IDLE_2_ACTIVE);
+
 }
 
 void ADC (void){
@@ -2747,20 +2740,40 @@ void ADC (void){
     ADCON1bits.ADFM = 0;
     ADCON1bits.VCFG0 = 0;
     ADCON1bits.VCFG1 = 0;
+    PORTA=0;
+    PORTB=0;
+    PORTC=0;
+    PORTD=0;
+
     while(1){
-        _delay((unsigned long)((5)*(8000000/4000.0)));
-        ADCON0bits.CHS = 0b0000;
+        PORTD = spiRead();
+        _delay((unsigned long)((1)*(8000000/4000.0)));
+        if (PORTD == 1){
+        ADCON0bits.CHS0 = 0;
+        ADCON0bits.CHS1 = 0;
+        ADCON0bits.CHS2 = 0;
+        ADCON0bits.CHS3 = 0;
+        _delay((unsigned long)((600)*(8000000/4000000.0)));
         ADCON0bits.ADON = 1;
         PIR1bits.ADIF = 0;
         ADCON0bits.GO = 1;
+        while(ADCON0bits.GO == 1);
         adc = ADRESH;
-        PORTB = adc;
-        _delay((unsigned long)((15)*(8000000/4000.0)));
-        ADCON0bits.CHS = 0b0011;
-        ADCON0bits.ADON = 1;
+        spiWrite(adc);
+        }
+       _delay((unsigned long)((600)*(8000000/4000000.0)));
+        if(PORTD == 2){
+        ADCON0bits.CHS0 = 1;
+        ADCON0bits.CHS1 = 1;
+        ADCON0bits.CHS2 = 0;
+        ADCON0bits.CHS3 = 0;
+        _delay((unsigned long)((600)*(8000000/4000000.0)));
         PIR1bits.ADIF = 0;
         ADCON0bits.GO = 1;
+        while(ADCON0bits.GO == 1);
         adc2 = ADRESH;
+        spiWrite(adc2);
+        }
     }
     return;
 }

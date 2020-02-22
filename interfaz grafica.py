@@ -45,28 +45,10 @@ caja.grid(row = 5, column=1)
 def enviar():
     serialPort.flushInput()
     serialPort.flushOutput()
-    time.sleep(.3)
-    num = Numero.get()
-    print(num)
-    print(type(num))
-    while(1):
-        try:
-            valor=float(num)
-            break
-        except:
-            text.set('ingrese valor de 0 a 255')
-            label.config(fg='red')
-            return
-    if(not(float(num)>=0 and float(num)<=255)):
-        Text.set('ingrese valor de 0 a 255')
-        label.config(fg='red')
-    else:
-        Text.set('enviado')
-        label.config(fg='green')
-        valor=int(num)
-        number=int((valor/180)*33)+5
-        valor=bytes([number])
-        serialPort.write(valor)
+    time.sleep(.05)
+    answer_write = Numero.get()
+    answer_send = chr(int(answer_write))
+    serialPort.write(answer_send)
         
 #boton
 boton1 = Button(gui, text='enviar', fg = 'white', bg='blue', command=enviar)
@@ -101,14 +83,4 @@ while True:
     gui.update() 	    
     time.sleep(.2)	   
 
-while(1):
-        
-    serialPort.flushInput()
-    serialPort.flushOutput()
-    time.sleep(.3)
-    recibido1=serialPort.read()
-    #ser.write(recibido1)
-    Volt1 = round((ord(recibido1)*5)/255,2)
-    label2=Label(gui, text = Volt1)
-    label2.grid(row=9, column=1)
-    gui.update()
+gui.mainloop()

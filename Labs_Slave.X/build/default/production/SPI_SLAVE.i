@@ -2496,8 +2496,6 @@ extern __bank0 __bit __timeout;
 # 27 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\xc.h" 2 3
 # 15 "./SPI_SLAVE.h" 2
 
-# 1 "./SPI_SLAVE.h" 1
-# 16 "./SPI_SLAVE.h" 2
 
 typedef enum
 {
@@ -2537,7 +2535,7 @@ char spiRead();
 
 void spiInit(Spi_Type sType, Spi_Data_Sample sDataSample, Spi_Clock_Idle sClockIdle, Spi_Transmit_Edge sTransmitEdge)
 {
-    TRISC5 = 0;
+    TRISC5=0;
     TRISC4 = 1;
     if(sType & 0b00000100)
     {

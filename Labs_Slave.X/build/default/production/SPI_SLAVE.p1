@@ -313,7 +313,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;SPI_SLAVE.c: 13: {
 [f ]
 "14
-[; ;SPI_SLAVE.c: 14:     TRISC5 = 0;
+[; ;SPI_SLAVE.c: 14:     TRISC5=0;
 [e = _TRISC5 -> -> 0 `i `b ]
 "15
 [; ;SPI_SLAVE.c: 15:     TRISC4 = 1;

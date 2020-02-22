@@ -2650,13 +2650,107 @@ typedef int16_t intptr_t;
 typedef uint16_t uintptr_t;
 # 37 "Lab4_Master.c" 2
 
+# 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c90\\stdio.h" 1 3
+
+
+
+# 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\__size_t.h" 1 3
+
+
+
+typedef unsigned size_t;
+# 4 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c90\\stdio.h" 2 3
+
+# 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\__null.h" 1 3
+# 5 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c90\\stdio.h" 2 3
+
+
+
+
+
+
+# 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c90\\stdarg.h" 1 3
+
+
+
+
+
+
+typedef void * va_list[1];
+
+#pragma intrinsic(__va_start)
+extern void * __va_start(void);
+
+#pragma intrinsic(__va_arg)
+extern void * __va_arg(void *, ...);
+# 11 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c90\\stdio.h" 2 3
+# 43 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c90\\stdio.h" 3
+struct __prbuf
+{
+ char * ptr;
+ void (* func)(char);
+};
+# 85 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c90\\stdio.h" 3
+# 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c90\\conio.h" 1 3
+
+
+
+
+
+
+
+# 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c90\\errno.h" 1 3
+# 29 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c90\\errno.h" 3
+extern int errno;
+# 8 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c90\\conio.h" 2 3
+
+
+
+
+extern void init_uart(void);
+
+extern char getch(void);
+extern char getche(void);
+extern void putch(char);
+extern void ungetch(char);
+
+extern __bit kbhit(void);
+
+
+
+extern char * cgets(char *);
+extern void cputs(const char *);
+# 85 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c90\\stdio.h" 2 3
+
+
+
+extern int cprintf(char *, ...);
+#pragma printf_check(cprintf)
+
+
+
+extern int _doprnt(struct __prbuf *, const register char *, register va_list);
+# 180 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c90\\stdio.h" 3
+#pragma printf_check(vprintf) const
+#pragma printf_check(vsprintf) const
+
+extern char * gets(char *);
+extern int puts(const char *);
+extern int scanf(const char *, ...) __attribute__((unsupported("scanf() is not supported by this compiler")));
+extern int sscanf(const char *, const char *, ...) __attribute__((unsupported("sscanf() is not supported by this compiler")));
+extern int vprintf(const char *, va_list) __attribute__((unsupported("vprintf() is not supported by this compiler")));
+extern int vsprintf(char *, const char *, va_list) __attribute__((unsupported("vsprintf() is not supported by this compiler")));
+extern int vscanf(const char *, va_list ap) __attribute__((unsupported("vscanf() is not supported by this compiler")));
+extern int vsscanf(const char *, const char *, va_list) __attribute__((unsupported("vsscanf() is not supported by this compiler")));
+
+#pragma printf_check(printf) const
+#pragma printf_check(sprintf) const
+extern int sprintf(char *, const char *, ...);
+extern int printf(const char *, ...);
+# 38 "Lab4_Master.c" 2
+
 # 1 "./SPI_MASTER.h" 1
-# 15 "./SPI_MASTER.h"
-# 1 "./SPI_MASTER.h" 1
-# 15 "./SPI_MASTER.h" 2
-
-
-
+# 17 "./SPI_MASTER.h"
 typedef enum
 {
     SPI_MASTER_OSC_DIV4 = 0b00100000,
@@ -2690,60 +2784,87 @@ void spiInit(Spi_Type, Spi_Data_Sample, Spi_Clock_Idle, Spi_Transmit_Edge);
 void spiWrite(char);
 unsigned spiDataReady();
 char spiRead();
-# 38 "Lab4_Master.c" 2
+# 39 "Lab4_Master.c" 2
+
+# 1 "./UART.h" 1
+# 48 "./UART.h"
+uint8_t UART_INIT(const long int baudrate);
+uint8_t UART_READ(void);
+void UART_Read_Text(char *Output, unsigned int length);
+void UART_WRITE(char data);
+void UART_Write_Text(char *text);
+# 40 "Lab4_Master.c" 2
+
+# 1 "./OSCI.h" 1
+# 34 "./OSCI.h"
+#pragma config FOSC = INTRC_NOCLKOUT
 
 
 
+
+
+
+
+void initOsc(uint8_t frec);
+# 41 "Lab4_Master.c" 2
+
+
+
+
+void setup(void);
 uint8_t pot1;
 uint8_t pot2;
-void setup(void);
-
+uint8_t cont;
 
 
 
 void main(void) {
     setup();
-    while(1){
-        PORTDbits.RD1 = 0;
-        _delay((unsigned long)((15)*(8000000/4000.0)));
-        spiWrite(1);
-        pot1 = spiRead();
-        PORTB = pot1;
-        _delay((unsigned long)((15)*(8000000/4000.0)));
-        PORTDbits.RD1 =1;
+    initOsc(7);
+    UART_INIT(9600);
+    PORTA = 0;
+    PORTB = 0;
+    PORTC = 0;
+    PORTD = 0;
+      while (1){
 
-        PORTDbits.RD1=0;
-       _delay((unsigned long)((15)*(8000000/4000.0)));
+
+        PORTDbits.RD1 = 0;
+        _delay((unsigned long)((1)*(8000000/4000.0)));
+        spiWrite(1);
+
+        pot1 = spiRead();
+
+        _delay((unsigned long)((1)*(8000000/4000.0)));
+        PORTDbits.RD1 = 1;
+
+        PORTDbits.RD1 = 0;
+        _delay((unsigned long)((1)*(8000000/4000.0)));
         spiWrite(2);
-        pot2 = spiRead();
-        _delay((unsigned long)((15)*(8000000/4000.0)));
-        PORTDbits.RD1 =1;
+
+        pot2= spiRead();
+        _delay((unsigned long)((1)*(8000000/4000.0)));
+        PORTDbits.RD1 = 1;
+
+
+        PORTB = UART_READ();
+
+          UART_WRITE(pot1);
+        _delay((unsigned long)((5)*(8000000/4000.0)));
+        UART_WRITE(pot2);
+
     }
     return;
 }
 void setup(void){
-    OSCCONbits.IRCF = 0b111;
-    OSCCONbits.OSTS= 0;
-    OSCCONbits.HTS = 0;
-    OSCCONbits.LTS = 0;
-    OSCCONbits.SCS = 1;
-    ANSEL = 0;
-    ANSELH = 0;
-    TRISDbits.TRISD1 = 0;
-    TRISDbits.TRISD2 = 0;
     TRISA = 0;
     TRISB = 0;
-
+    TRISC = 0;
+    TRISCbits.TRISC4 = 1;
+    TRISCbits.TRISC7 = 1;
     TRISD = 0;
-
-    PORTB = 0;
-    PORTD = 0;
-
-    INTCONbits.GIE = 1;
-    INTCONbits.PEIE = 1;
-    PIR1bits.SSPIF = 0;
-    PIE1bits.SSPIE = 1;
-    TRISAbits.TRISA5 = 1;
+    TRISDbits.TRISD1 = 0;
+    ANSEL = 0;
+    ANSELH = 0;
     spiInit(SPI_MASTER_OSC_DIV4, SPI_DATA_SAMPLE_MIDDLE, SPI_CLOCK_IDLE_LOW, SPI_IDLE_2_ACTIVE);
-
 }

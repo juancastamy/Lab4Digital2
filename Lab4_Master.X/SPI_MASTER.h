@@ -12,7 +12,6 @@
 #ifndef __SPI_MASTER_H
 #define	__SPI_MASTER_H
 
-#include "SPI_MASTER.h"
 #include <xc.h> // include processor files - each processor file is guarded.  
 
 typedef enum 

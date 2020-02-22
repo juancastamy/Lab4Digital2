@@ -37,53 +37,51 @@
 #include <pic16f887.h>
 #include <stdint.h>
 #include "SPI_SLAVE.h"
+#include "OSCI_SLAVE.h"
 #define _XTAL_FREQ 8000000
 void setup(void);
-
 void ADC (void);
-uint8_t adc;
-uint8_t adc2;
+uint8_t adc = 0;
+uint8_t adc2 = 0;
+
  
-void __interrupt() ISR(void){
-    PORTD = spiRead();
-    if (SSPIF == 1){ 
-        if (PORTD ==1){
-         spiWrite(adc);
-    } 
-        if (PORTD == 2){
-          spiWrite(adc2);
-        }
-        SSPIF = 0;  
-    }
-}
+//void __interrupt() ISR(void){
+//    if(SSPIF == 1){
+//          PORTD = spiRead();
+//          if (PORTD == 1){
+//              spiWrite(adc);
+//           }
+//           if (PORTD == 2){
+//               spiWrite(adc2);
+//           }
+//        SSPIF = 0;
+//    }
+//}
 
 void main(void) {
     setup();
-    spiInit(SPI_SLAVE_SS_EN, SPI_DATA_SAMPLE_MIDDLE, SPI_CLOCK_IDLE_LOW, SPI_IDLE_2_ACTIVE);
+    initOsc(7);
     ADC();
+    
 }
 
 void setup (void){
-    OSCCONbits.IRCF = 0b111; //8Mhz
-    OSCCONbits.OSTS= 0;
-    OSCCONbits.HTS = 0;
-    OSCCONbits.LTS = 0;
-    OSCCONbits.SCS = 1;
-    TRISB = 0;
-    TRISD = 0;
-    TRISDbits.TRISD1 = 0;
-
-    PORTB = 0;
-    PORTD = 0;
-
-    INTCONbits.GIE = 1;         // Habilitamos interrupciones
-    INTCONbits.PEIE = 1;        // Habilitamos interrupciones PEIE
-    PIR1bits.SSPIF = 0;         // Borramos bandera interrupción MSSP
-    PIE1bits.SSPIE = 1;         // Habilitamos interrupción MSSP
-    TRISAbits.TRISA5 = 1; 
+    
     TRISA = 0b00001001;
+    TRISB = 0;
+    TRISC = 0b00001000;
+    TRISD = 0;
     ANSEL = 0b00001001;
     ANSELH = 0;
+
+//    INTCONbits.GIE = 1;         // Habilitamos interrupciones
+//    INTCONbits.PEIE = 1;        // Habilitamos interrupciones PEIE
+//    INTCONbits.T0IE = 1;
+//    PIR1bits.SSPIF = 0;         // Borramos bandera interrupción MSSP
+//    PIE1bits.SSPIE = 1;         // Habilitamos interrupción MSSP
+    TRISAbits.TRISA5 = 1; 
+    spiInit(SPI_SLAVE_SS_EN, SPI_DATA_SAMPLE_MIDDLE, SPI_CLOCK_IDLE_LOW, SPI_IDLE_2_ACTIVE);
+
 }
 
 void ADC (void){
@@ -93,20 +91,40 @@ void ADC (void){
     ADCON1bits.ADFM = 0;
     ADCON1bits.VCFG0 = 0;
     ADCON1bits.VCFG1 = 0;
+    PORTA=0;
+    PORTB=0;
+    PORTC=0;
+    PORTD=0;
+   
     while(1){
-        __delay_ms(5);
-        ADCON0bits.CHS = 0b0000;
+        PORTD = spiRead();
+        __delay_ms(1);
+        if (PORTD == 1){
+        ADCON0bits.CHS0 = 0;
+        ADCON0bits.CHS1 = 0;
+        ADCON0bits.CHS2 = 0;
+        ADCON0bits.CHS3 = 0;
+        __delay_us(600);
         ADCON0bits.ADON = 1;
         PIR1bits.ADIF = 0;
         ADCON0bits.GO = 1;
+        while(ADCON0bits.GO == 1);
         adc = ADRESH;
-        PORTB = adc;        
-        __delay_ms(15);
-        ADCON0bits.CHS = 0b0011;
-        ADCON0bits.ADON = 1;   // adc on
+        spiWrite(adc);
+        }
+       __delay_us(600);
+        if(PORTD == 2){ 
+        ADCON0bits.CHS0 = 1;
+        ADCON0bits.CHS1 = 1;
+        ADCON0bits.CHS2 = 0;
+        ADCON0bits.CHS3 = 0;
+        __delay_us(600);
         PIR1bits.ADIF = 0;
         ADCON0bits.GO = 1;
+        while(ADCON0bits.GO == 1);
         adc2 = ADRESH; 
+        spiWrite(adc2);
+        }
     }
     return;
-} 
+}

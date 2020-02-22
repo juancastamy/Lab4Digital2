@@ -13,7 +13,7 @@
 #define	__SPI_SLAVE_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
-#include "SPI_SLAVE.h"
+
 typedef enum 
 {
     SPI_MASTER_OSC_DIV4  = 0b00100000,

@@ -35,60 +35,68 @@
 
 #include <xc.h>
 #include <stdint.h>
+#include <stdio.h>	
 #include "SPI_MASTER.h"
+#include "UART.h"
+#include "OSCI.h"
 #define _XTAL_FREQ 8000000
 
+
+void setup(void);
 uint8_t pot1;
 uint8_t pot2;
-void setup(void);
-
+uint8_t cont;
 
 
 
 void main(void) {
     setup();
-    while(1){
-        PORTDbits.RD1 = 0;
-        __delay_ms(15);
+    initOsc(7);
+    UART_INIT(9600);
+    PORTA = 0;
+    PORTB = 0;
+    PORTC = 0;
+    PORTD = 0;
+      while (1){
+        
+        	        
+        PORTDbits.RD1 = 0;          //Seleccionar al SLAVE
+        __delay_ms (1);             //Delay de 1 milisegundo
         spiWrite(1);
-        pot1 = spiRead();
-        PORTB = pot1;
-        __delay_ms(15);
-        PORTDbits.RD1 =1;
        
-        PORTDbits.RD1=0;
-       __delay_ms(15);
+        pot1 = spiRead();        //Leer dato preveniente de SLAVE PIC
+        
+        __delay_ms(1);
+        PORTDbits.RD1 = 1;          //Slave Deselect 
+        	        
+        PORTDbits.RD1 = 0;          //Seleccionar al SLAVE
+        __delay_ms (1);             //Delay de 1 milisegundo
         spiWrite(2);
-        pot2 = spiRead();
-        __delay_ms(15);
-        PORTDbits.RD1 =1;
-    }
+       
+        pot2= spiRead();        //Leer dato preveniente de SLAVE PIC
+        __delay_ms(1);
+        PORTDbits.RD1 = 1;          //Slave Deselect
+        
+        
+        PORTB = UART_READ();     //Valor transmitido por la computadora es leído y colocado en puerto
+
+          UART_WRITE(pot1);        //Escribir el el registro de UART para transmitir dato 1	        UART_Write(RecPOT1);        //Escribir el el registro de UART para transmitir dato 1
+        __delay_ms(5);              //Delay de 5 milisegundos	        __delay_ms(5);              //Delay de 5 milisegundos
+        UART_WRITE(pot2);        //Escribir el el registro de UART para transmitir dato 1	        UART_Write(RecPOT2);        //Escribir el el registro de UART para transmitir dato 1
+
+    }	    
     return;
 }
 void setup(void){
-    OSCCONbits.IRCF = 0b111; //8Mhz
-    OSCCONbits.OSTS= 0;
-    OSCCONbits.HTS = 0;
-    OSCCONbits.LTS = 0;
-    OSCCONbits.SCS = 1; 
-    ANSEL = 0;
-    ANSELH = 0;
-    TRISDbits.TRISD1 = 0;
-    TRISDbits.TRISD2 = 0;
     TRISA = 0;
     TRISB = 0;
-    
+    TRISC = 0;
+    TRISCbits.TRISC4 = 1;
+    TRISCbits.TRISC7 = 1;
     TRISD = 0;
-
-    PORTB = 0;
-    PORTD = 0;
-
-    INTCONbits.GIE = 1;         // Habilitamos interrupciones
-    INTCONbits.PEIE = 1;        // Habilitamos interrupciones PEIE
-    PIR1bits.SSPIF = 0;         // Borramos bandera interrupción MSSP
-    PIE1bits.SSPIE = 1;         // Habilitamos interrupción MSSP
-    TRISAbits.TRISA5 = 1;       // Slave Select
-    spiInit(SPI_MASTER_OSC_DIV4, SPI_DATA_SAMPLE_MIDDLE, SPI_CLOCK_IDLE_LOW, SPI_IDLE_2_ACTIVE);
-      
+    TRISDbits.TRISD1 = 0;
+    ANSEL = 0;
+    ANSELH = 0;
+    spiInit(SPI_MASTER_OSC_DIV4, SPI_DATA_SAMPLE_MIDDLE, SPI_CLOCK_IDLE_LOW, SPI_IDLE_2_ACTIVE);  
 }
 
